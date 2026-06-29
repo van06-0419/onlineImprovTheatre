@@ -28,6 +28,23 @@
 
 
 ## Команда проекта
-Проект выполняется группой из трёх студентов.
+Проект выполняется группой из двух студентов.
+
+## Сборка проекта
+```bash
+git clone https://github.com/van06-0419/onlineImprovTheatre.git
+# или скачайте проект вручную
+
+cd onlineImprovTheatre
+mkdir build
+cd build
+cmake ..
+
+# Windows (MinGW)
+mingw32-make
+
+# Linux / macOS
+make
+```
 
 

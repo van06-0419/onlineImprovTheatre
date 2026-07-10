@@ -17,7 +17,7 @@ private slots:
 
 private:
     QTcpServer m_tcpServer;
-    Room       m_room;
+    Room m_room;
 };
 
 #endif // SERVER_H

@@ -1,6 +1,10 @@
 #include "Server.h"
 #include <QDebug>
+#include <QTcpSocket>
 #include "../Common/CommonDef.h"
+#include "../Common/Packet.h"
+#include "../Common/Scene.h"
+#include "../Common/Role.h"
 
 Server::Server(QObject *parent)
     : QObject(parent)
@@ -26,5 +30,6 @@ void Server::onNewConnection()
     {
         qDebug() << "Новый клиент подключен";
         m_room.addClientSocket(sock);
+        connect(sock, &QTcpSocket::disconnected, sock, &QTcpSocket::deleteLater);
     }
 }

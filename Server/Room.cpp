@@ -1,17 +1,21 @@
 #include "Room.h"
 #include <QDebug>
 #include <QStringList>
+#include <QRandomGenerator>
+#include <algorithm>
 
 Room::Room(QObject *parent)
-    : QObject(parent)
-{}
+    : QObject(parent),
+      m_gameStarted(false)
+{
+}
 
 void Room::addClientSocket(QTcpSocket *sock)
 {
     if (!sock) return;
-    m_socketList.append(sock);
-    connect(sock, &QTcpSocket::readyRead, this, &Room::onReadData);
-    connect(sock, &QTcpSocket::disconnected, this, &Room::onClientDisconnect);
+    m_socketList.append(sock); // 将客户端套接字存入房间套接字列表
+    connect(sock, &QTcpSocket::readyRead, this, &Room::onReadData); // onReadData
+    connect(sock, &QTcpSocket::disconnected, this, &Room::onClientDisconnect); // 绑定：客户端断开连接时触发 onClientDisconnect
 }
 
 void Room::broadcastPacket(const Packet &pkt)
@@ -51,7 +55,6 @@ void Room::handlePacket(QTcpSocket *sock, const Packet &pkt)
     QString cmd = pkt.command();
     QString data = pkt.data();
 
-    // Авторизация
     if (cmd == "LOGIN")
     {
         QStringList parts = data.split(",");
@@ -63,28 +66,74 @@ void Room::handlePacket(QTcpSocket *sock, const Packet &pkt)
 
         bool ok = m_userMgr.addUser(user);
         if (ok)
-        {
-            broadcastPacket(Packet("MSG", name + " вошёл в комнату"));
-        }
-        else
-        {
-            sock->write("MSG|Комната заполнена\n");
-        }
+{
+    broadcastPacket(Packet("MSG", name + " вошёл в комнату"));
+
+    if (m_gameStarted)
+{
+    QString role =
+            m_roleMap.value(name);
+
+    Packet pkt(
+        "START",
+        m_currentScene + "|" + role);
+
+    sock->write(
+        (pkt.toString() + "\n").toUtf8());
+}
+}
+else
+{
+    sock->write("MSG|Комната заполнена\n");
+}
     }
-    // Начать игру: назначить роль и сцену
-    else if (cmd == "START")
+
+else if (cmd == "START")
+{
+    m_gameStarted = true;
+    m_currentScene = m_scene.getRandomScene();
+    m_roleMap.clear();
+
+    for (const User& user : m_userMgr.users())
     {
-        QString scene = m_scene.getRandomScene();
-        QString role = m_role.getRandomRole();
-        broadcastPacket(Packet("START", scene + "|" + role));
-        m_userMgr.resetVoteStatus();
+        if (user.userType() == ACTOR)
+        {
+            QString randRole = m_role.getRandomRole();
+            m_roleMap.insert(user.userName(), randRole);
+        }
     }
-    // Передача сообщений чата
+
+    QString actorRoleStr;
+    for (auto it = m_roleMap.begin(); it != m_roleMap.end(); ++it)
+    {
+        if (!actorRoleStr.isEmpty())
+            actorRoleStr += ",";
+        actorRoleStr += it.key() + ":" + it.value();
+    }
+
+    for (QTcpSocket* sock : m_socketList)
+    {
+        User* user = m_userMgr.findUser(sock);
+        if (!user) continue;
+
+        QString selfRole = m_roleMap.value(user->userName(), "");
+        QString pktData = QString("%1|%2|%3")
+                .arg(m_currentScene)
+                .arg(selfRole)
+                .arg(actorRoleStr);
+
+        Packet pkt("START", pktData);
+        sock->write((pkt.toString() + "\n").toUtf8());
+    }
+
+    m_userMgr.resetVoteStatus();
+}
+
+
     else if (cmd == "CHAT")
     {
         broadcastPacket(Packet("CHAT", data));
     }
-    // Голосование зрителей
     else if (cmd == "VOTE")
     {
         QString voteName = data;

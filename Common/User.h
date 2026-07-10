@@ -1,33 +1,37 @@
-#ifndef USER_H
-#define USER_H
+#ifndef USERMANAGER_H
+#define USERMANAGER_H
 
-#include <QString>
-#include <QTcpSocket>
-#include "CommonDef.h"
+#include "../Common/User.h"
+#include "../Common/CommonDef.h"
+#include <QVector>
+#include <QMap>
 
-class User
+class UserManager
 {
 public:
-    User();
-    User(const QString& name, UserType type, QTcpSocket* sock);
+    UserManager();
 
-    QString userName() const;
-    void setUserName(const QString& name);
+    bool addUser(const User& user);
+    void removeUser(QTcpSocket* sock);
 
-    UserType userType() const;
-    void setUserType(UserType type);
+    int actorCount() const;
+    int audienceCount() const;
 
-    QTcpSocket* socket() const;
-    void setSocket(QTcpSocket* sock);
+    void voteForUser(const QString& userName);
+    bool allAudienceVoted() const;
+    QString getWinner() const;
+    void resetVoteStatus();
 
-    bool hasVoted() const;
-    void setVoted(bool voted);
+    // new
+    const QVector<User>& users() const;
+
+    User* findUser(QTcpSocket* sock);
+
+    QString userName(QTcpSocket* sock) const;
 
 private:
-    QString     m_userName;
-    UserType    m_type;
-    QTcpSocket* m_socket;
-    bool        m_hasVoted;
+    QVector<User> m_userList;
+    QMap<QString, int> m_voteCount;
 };
 
-#endif // USER_H
+#endif // USERMANAGER_H

@@ -3,14 +3,24 @@
 
 Role::Role()
 {
-    m_roleList << "Детектив" << "Хозяин" << "Путешественник" << "Рыцарь" << "Певец"
-               << "Повар" << "Посыльный" << "Учёный";
+    m_roleList
+            << "Детектив"
+            << "Хозяин"
+            << "Путешественник"
+            << "Рыцарь"
+            << "Певец"
+            << "Повар"
+            << "Посыльный"
+            << "Учёный";
 }
 
 QString Role::getRandomRole() const
 {
-    if (m_roleList.isEmpty()) return "Неизвестный персонаж";
+    int index = QRandomGenerator::global()->bounded(m_roleList.size());
+    return m_roleList[index];
+}
 
-    int idx = QRandomGenerator::global()->bounded(m_roleList.size());
-    return m_roleList[idx];
+QVector<QString> Role::roleList() const
+{
+    return m_roleList;
 }

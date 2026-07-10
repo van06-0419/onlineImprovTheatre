@@ -1,49 +1,139 @@
-#include "User.h"
+#include "UserManager.h"
 
-User::User()
-    : m_type(AUDIENCE), m_socket(nullptr), m_hasVoted(false)
-{}
-
-User::User(const QString& name, UserType type, QTcpSocket* sock)
-    : m_userName(name), m_type(type), m_socket(sock), m_hasVoted(false)
-{}
-
-QString User::userName() const
+UserManager::UserManager()
 {
-    return m_userName;
 }
 
-void User::setUserName(const QString& name)
+bool UserManager::addUser(const User& user)
 {
-    m_userName = name;
+    if (user.userType() == ACTOR && actorCount() >= MAX_ACTOR)
+        return false;
+
+    if (user.userType() == AUDIENCE && audienceCount() >= MAX_AUDIENCE)
+        return false;
+
+    m_userList.append(user);
+    return true;
 }
 
-UserType User::userType() const
+void UserManager::removeUser(QTcpSocket* sock)
 {
-    return m_type;
+    for (int i = 0; i < m_userList.size(); ++i)
+    {
+        if (m_userList[i].socket() == sock)
+        {
+            m_userList.removeAt(i);
+            break;
+        }
+    }
 }
 
-void User::setUserType(UserType type)
+int UserManager::actorCount() const
 {
-    m_type = type;
+    int cnt = 0;
+
+    for (const User& u : m_userList)
+    {
+        if (u.userType() == ACTOR)
+            cnt++;
+    }
+
+    return cnt;
 }
 
-QTcpSocket* User::socket() const
+int UserManager::audienceCount() const
 {
-    return m_socket;
+    int cnt = 0;
+
+    for (const User& u : m_userList)
+    {
+        if (u.userType() == AUDIENCE)
+            cnt++;
+    }
+
+    return cnt;
 }
 
-void User::setSocket(QTcpSocket* sock)
+void UserManager::voteForUser(const QString& userName)
 {
-    m_socket = sock;
+    m_voteCount[userName]++;
+
+    for (User& u : m_userList)
+    {
+        if (u.userName() == userName)
+        {
+            u.setVoted(true);
+            break;
+        }
+    }
 }
 
-bool User::hasVoted() const
+bool UserManager::allAudienceVoted() const
 {
-    return m_hasVoted;
+    for (const User& u : m_userList)
+    {
+        if (u.userType() == AUDIENCE && !u.hasVoted())
+            return false;
+    }
+
+    return true;
 }
 
-void User::setVoted(bool voted)
+QString UserManager::getWinner() const
 {
-    m_hasVoted = voted;
+    if (m_voteCount.isEmpty())
+        return "暂无";
+
+    QString winner;
+    int maxVote = -1;
+
+    for (auto it = m_voteCount.begin(); it != m_voteCount.end(); ++it)
+    {
+        if (it.value() > maxVote)
+        {
+            maxVote = it.value();
+            winner = it.key();
+        }
+    }
+
+    return winner;
+}
+
+void UserManager::resetVoteStatus()
+{
+    m_voteCount.clear();
+
+    for (User& u : m_userList)
+    {
+        u.setVoted(false);
+    }
+}
+
+// new
+
+const QVector<User>& UserManager::users() const
+{
+    return m_userList;
+}
+
+User* UserManager::findUser(QTcpSocket* sock)
+{
+    for (User& u : m_userList)
+    {
+        if (u.socket() == sock)
+            return &u;
+    }
+
+    return nullptr;
+}
+
+QString UserManager::userName(QTcpSocket* sock) const
+{
+    for (const User& u : m_userList)
+    {
+        if (u.socket() == sock)
+            return u.userName();
+    }
+
+    return "";
 }

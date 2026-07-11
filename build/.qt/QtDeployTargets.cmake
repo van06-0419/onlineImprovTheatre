@@ -1,6 +1,0 @@
-set(__QT_DEPLOY_TARGET_ChatServer_FILE C:/Users/Asus/Desktop/project/onlineImprovTheatre/build/ChatServer.exe)
-set(__QT_DEPLOY_TARGET_ChatServer_TYPE EXECUTABLE)
-set(__QT_DEPLOY_TARGET_ChatServer_RUNTIME_DLLS C:/msys64/mingw64/bin/Qt6Network.dll;C:/msys64/mingw64/bin/Qt6Core.dll)
-set(__QT_DEPLOY_TARGET_ChatClient_FILE C:/Users/Asus/Desktop/project/onlineImprovTheatre/build/ChatClient.exe)
-set(__QT_DEPLOY_TARGET_ChatClient_TYPE EXECUTABLE)
-set(__QT_DEPLOY_TARGET_ChatClient_RUNTIME_DLLS C:/msys64/mingw64/bin/Qt6Network.dll;C:/msys64/mingw64/bin/Qt6Widgets.dll;C:/msys64/mingw64/bin/Qt6Gui.dll;C:/msys64/mingw64/bin/Qt6Core.dll)

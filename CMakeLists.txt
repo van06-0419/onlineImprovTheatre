@@ -38,6 +38,7 @@ target_link_libraries(ChatServer
     Qt6::Network
 )
 
+# Пока что папка называется Clie
 # ChatClient
 add_executable(ChatClient
     Client/main.cpp

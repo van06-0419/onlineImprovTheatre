@@ -36,7 +36,7 @@ private:
     QTcpSocket m_socket;
     QString    m_userName;
     UserType   m_userType;
-    QString    m_recvBuffer;
+    QString    m_recvBuffer; // 新增：接收缓冲区，解决粘包问题
 };
 
 #endif // CLIENT_H

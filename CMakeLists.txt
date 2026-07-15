@@ -2,12 +2,11 @@ cmake_minimum_required(VERSION 3.16)
 project(ChatDemo)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Network Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Network Widgets Multimedia)
 
 set(COMMON_SRC
     Common/CommonDef.h
@@ -18,7 +17,7 @@ set(COMMON_SRC
     Common/User.h Common/User.cpp
 )
 
-# ChatServer 
+# ChatServer
 add_executable(ChatServer
     Server/main.cpp
     Server/Server.h Server/Server.cpp
@@ -26,19 +25,12 @@ add_executable(ChatServer
     Server/UserManager.h Server/UserManager.cpp
     ${COMMON_SRC}
 )
-# headPath
-target_include_directories(ChatServer PRIVATE
-    .
-    Common
-    Server
-)
-# Core+Network
+target_include_directories(ChatServer PRIVATE . Common Server)
 target_link_libraries(ChatServer
     Qt6::Core
     Qt6::Network
 )
 
-# Пока что папка называется Clie
 # ChatClient
 add_executable(ChatClient
     Client/main.cpp
@@ -47,16 +39,13 @@ add_executable(ChatClient
     Client/ChatWindow.h Client/ChatWindow.cpp Client/ChatWindow.ui
     Client/LobbyWindow.h Client/LobbyWindow.cpp Client/LobbyWindow.ui
     Client/VoteWindow.h Client/VoteWindow.cpp Client/VoteWindow.ui
+    Client/VoiceChat.h Client/VoiceChat.cpp
     ${COMMON_SRC}
 )
-target_include_directories(ChatClient PRIVATE
-    .
-    Common
-    Client
-)
-# Widgets
+target_include_directories(ChatClient PRIVATE . Common Client)
 target_link_libraries(ChatClient
     Qt6::Core
     Qt6::Network
     Qt6::Widgets
+    Qt6::Multimedia
 )

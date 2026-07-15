@@ -13,9 +13,9 @@ Room::Room(QObject *parent)
 void Room::addClientSocket(QTcpSocket *sock)
 {
     if (!sock) return;
-    m_socketList.append(sock); // 将客户端套接字存入房间套接字列表
-    connect(sock, &QTcpSocket::readyRead, this, &Room::onReadData); // onReadData
-    connect(sock, &QTcpSocket::disconnected, this, &Room::onClientDisconnect); // 绑定：客户端断开连接时触发 onClientDisconnect
+    m_socketList.append(sock);
+    connect(sock, &QTcpSocket::readyRead, this, &Room::onReadData);
+    connect(sock, &QTcpSocket::disconnected, this, &Room::onClientDisconnect);
 }
 
 void Room::broadcastPacket(const Packet &pkt)
@@ -33,7 +33,6 @@ void Room::onReadData()
 {
     QTcpSocket* sock = qobject_cast<QTcpSocket*>(sender());
     if (!sock) return;
-
     QString recvData = sock->readAll();
     Packet pkt = Packet::fromString(recvData);
     handlePacket(sock, pkt);
@@ -43,7 +42,6 @@ void Room::onClientDisconnect()
 {
     QTcpSocket* sock = qobject_cast<QTcpSocket*>(sender());
     if (!sock) return;
-
     m_userMgr.removeUser(sock);
     m_socketList.removeOne(sock);
     sock->deleteLater();
@@ -63,76 +61,92 @@ void Room::handlePacket(QTcpSocket *sock, const Packet &pkt)
         QString name = parts[0];
         UserType type = (parts[1] == "ACTOR") ? ACTOR : AUDIENCE;
         User user(name, type, sock);
-
         bool ok = m_userMgr.addUser(user);
+
         if (ok)
-{
-    broadcastPacket(Packet("MSG", name + " вошёл в комнату"));
-
-    if (m_gameStarted)
-{
-    QString role =
-            m_roleMap.value(name);
-
-    Packet pkt(
-        "START",
-        m_currentScene + "|" + role);
-
-    sock->write(
-        (pkt.toString() + "\n").toUtf8());
-}
-}
-else
-{
-    sock->write("MSG|Комната заполнена\n");
-}
-    }
-
-else if (cmd == "START")
-{
-    m_gameStarted = true;
-    m_currentScene = m_scene.getRandomScene();
-    m_roleMap.clear();
-
-    for (const User& user : m_userMgr.users())
-    {
-        if (user.userType() == ACTOR)
         {
-            QString randRole = m_role.getRandomRole();
-            m_roleMap.insert(user.userName(), randRole);
+            broadcastPacket(Packet("MSG", name + " вошёл в комнату"));
+
+            if (m_gameStarted)
+            {
+                User* newUser = m_userMgr.findUser(sock);
+                if (newUser)
+                {
+                    QString selfRole = (newUser->userType() == ACTOR)
+                        ? m_roleMap.value(newUser->userName())
+                        : "";
+
+                    QString actorRoleStr;
+                    for (auto it = m_roleMap.begin(); it != m_roleMap.end(); ++it)
+                    {
+                        if (!actorRoleStr.isEmpty()) actorRoleStr += ",";
+                        actorRoleStr += it.key() + ":" + it.value();
+                    }
+
+                    QString pktData = QString("%1|%2|%3")
+                        .arg(m_currentScene)
+                        .arg(selfRole)
+                        .arg(actorRoleStr);
+
+                    sock->write((Packet("START", pktData).toString() + "\n").toUtf8());
+                }
+            }
+        }
+        else
+        {
+            sock->write("MSG|Комната заполнена\n");
         }
     }
-
-    QString actorRoleStr;
-    for (auto it = m_roleMap.begin(); it != m_roleMap.end(); ++it)
+    else if (cmd == "START")
     {
-        if (!actorRoleStr.isEmpty())
-            actorRoleStr += ",";
-        actorRoleStr += it.key() + ":" + it.value();
-    }
+        m_gameStarted = true;
+        m_currentScene = m_scene.getRandomScene();
+        m_roleMap.clear();
 
-    for (QTcpSocket* sock : m_socketList)
-    {
-        User* user = m_userMgr.findUser(sock);
-        if (!user) continue;
+        for (const User& user : m_userMgr.users())
+        {
+            if (user.userType() == ACTOR)
+            {
+                QString randRole = m_role.getRandomRole();
+                m_roleMap.insert(user.userName(), randRole);
+            }
+        }
 
-        QString selfRole = m_roleMap.value(user->userName(), "");
-        QString pktData = QString("%1|%2|%3")
+        QString actorRoleStr;
+        for (auto it = m_roleMap.begin(); it != m_roleMap.end(); ++it)
+        {
+            if (!actorRoleStr.isEmpty())
+                actorRoleStr += ",";
+            actorRoleStr += it.key() + ":" + it.value();
+        }
+
+        for (QTcpSocket* s : m_socketList)
+        {
+            User* user = m_userMgr.findUser(s);
+            if (!user) continue;
+
+            QString selfRole = m_roleMap.value(user->userName(), "");
+            QString pktData = QString("%1|%2|%3")
                 .arg(m_currentScene)
                 .arg(selfRole)
                 .arg(actorRoleStr);
 
-        Packet pkt("START", pktData);
-        sock->write((pkt.toString() + "\n").toUtf8());
+            Packet p("START", pktData);
+            s->write((p.toString() + "\n").toUtf8());
+        }
+
+        m_userMgr.resetVoteStatus();
     }
-
-    m_userMgr.resetVoteStatus();
-}
-
-
     else if (cmd == "CHAT")
     {
         broadcastPacket(Packet("CHAT", data));
+    }
+    else if (cmd == "VOICE")
+    {
+        //  работает ТОЛЬКО с VoiceChat.h/cpp 
+        // в клиент и модуль Multimedia в CMakeLists.txt. 
+        // Если голосовой чат пока не нужен, удалите этот блок else if.
+        broadcastPacket(Packet("VOICE", data));
     }
     else if (cmd == "VOTE")
     {

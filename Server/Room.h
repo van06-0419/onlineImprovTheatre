@@ -5,7 +5,6 @@
 #include "../Common/Role.h"
 #include "../Common/Scene.h"
 #include "../Common/Packet.h"
-
 #include <QObject>
 #include <QTcpSocket>
 #include <QVector>
@@ -14,7 +13,6 @@
 class Room : public QObject
 {
     Q_OBJECT
-
 public:
     explicit Room(QObject *parent = nullptr);
     void addClientSocket(QTcpSocket *sock);
@@ -32,8 +30,7 @@ private:
     bool m_gameStarted;
     QString m_currentScene;
     QMap<QString, QString> m_roleMap;
-    void handlePacket(QTcpSocket *sock,
-                      const Packet &pkt);
+    void handlePacket(QTcpSocket *sock, const Packet &pkt);
 };
 
 #endif // ROOM_H

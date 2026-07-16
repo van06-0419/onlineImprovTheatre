@@ -59,7 +59,7 @@ void VoiceChat::startMicrophone()
     QAudioDevice info = QMediaDevices::defaultAudioInput();
     if (!info.isFormatSupported(format))
     {
-        qWarning() << "Формат не поддерживается микрофоном";
+        qWarning() << "The format is not supported by the microphone";
         return;
     }
 
@@ -72,7 +72,7 @@ void VoiceChat::startMicrophone()
                 this, &VoiceChat::onAudioDataReady);
         m_micOn = true;
         emit microphoneStateChanged(true);
-        qDebug() << "Микрофон включён";
+        qDebug() << "Microphone is on";
     }
 }
 
@@ -88,7 +88,7 @@ void VoiceChat::stopMicrophone()
     }
     m_micOn = false;
     emit microphoneStateChanged(false);
-    qDebug() << "Микрофон выключен";
+    qDebug() << "Microphone is off";
 }
 
 bool VoiceChat::isMicrophoneOn() const

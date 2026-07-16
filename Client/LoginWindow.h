@@ -11,13 +11,13 @@ QT_END_NAMESPACE
 class LoginWindow : public QWidget
 {
     Q_OBJECT
-
 public:
     explicit LoginWindow(Client* client, QWidget *parent = nullptr);
     ~LoginWindow();
 
 signals:
     void loginSuccess();
+    void serverIPRequested(const QString& ip);
 
 private slots:
     void onBtnLoginClicked();

@@ -21,37 +21,42 @@ LoginWindow::~LoginWindow()
 
 void LoginWindow::onBtnLoginClicked()
 {
-    QString name = ui->editName->text().trimmed();
-    if (name.isEmpty())
+    QString serverIP = ui->editIP->text().trimmed();
+    if (serverIP.isEmpty())
     {
-        QMessageBox::warning(this, "Warning", "Name can not be empty");
+        QMessageBox::warning(this, "Warning", "Please enter server IP!");
         return;
     }
 
+    QString name = ui->editName->text().trimmed();
+    if (name.isEmpty())
+    {
+        QMessageBox::warning(this, "Warning", "Name cannot be empty");
+        return;
+    }
+    
     QString selectText = ui->cboxType->currentText().trimmed();
     
-
     UserType type = AUDIENCE;
+    
     if (selectText == "Актёр")
     {
         type = ACTOR;
-        qDebug() << "This is actor (ACTOR), type = 0";
     }
     else if (selectText == "Зритель")
     {
         type = AUDIENCE;
-        qDebug() << "This is audience (AUDIENCE), type = 1";
     }
-
+    
     m_client->setUserName(name);
     m_client->setUserType(type);
-    qDebug() << "Saved type in Client: " << m_client->userType();
-
+    
+    // Отправляем IP для подключения
+    emit serverIPRequested(serverIP);
+    
     QString typeStr = (type == ACTOR) ? "ACTOR" : "AUDIENCE";
     Packet pkt("LOGIN", name + "," + typeStr);
     m_client->sendPacket(pkt);
-
     emit loginSuccess();
     this->close();
 }
-

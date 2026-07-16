@@ -51,13 +51,10 @@ void Client::setUserType(UserType type)
     m_userType = type;
 }
 
-// 正确写法：按 \n 分割数据包，解决粘包问题
 void Client::onReadData()
 {
-    // 把新收到的数据追加到缓冲区
     m_recvBuffer += m_socket.readAll();
 
-    // 循环取出缓冲区里所有完整的数据包（以 \n 结尾）
     while (m_recvBuffer.contains('\n'))
     {
         int idx = m_recvBuffer.indexOf('\n');

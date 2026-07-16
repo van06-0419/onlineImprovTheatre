@@ -74,7 +74,7 @@ bool UserManager::allAudienceVoted() const
 QString UserManager::getWinner() const
 {
     if (m_voteCount.isEmpty())
-        return "暂无";
+        return "None";
     QString winner;
     int maxVote = -1;
     for (auto it = m_voteCount.begin(); it != m_voteCount.end(); ++it)

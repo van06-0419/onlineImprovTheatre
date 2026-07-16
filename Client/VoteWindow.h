@@ -22,7 +22,6 @@ private slots:
 private:
     Ui::VoteWindow *ui;
     Client* m_client;
-    // 新增：保存所有演员
     QStringList m_actorList;
 
 };

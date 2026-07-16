@@ -45,7 +45,7 @@ void Room::onClientDisconnect()
     m_userMgr.removeUser(sock);
     m_socketList.removeOne(sock);
     sock->deleteLater();
-    qDebug() << "Клиент отключился";
+    qDebug() << "The client has disconnected";
 }
 
 void Room::handlePacket(QTcpSocket *sock, const Packet &pkt)
@@ -65,7 +65,7 @@ void Room::handlePacket(QTcpSocket *sock, const Packet &pkt)
 
         if (ok)
         {
-            broadcastPacket(Packet("MSG", name + " вошёл в комнату"));
+            broadcastPacket(Packet("MSG", name + " He entered the room"));
 
             if (m_gameStarted)
             {
@@ -94,7 +94,7 @@ void Room::handlePacket(QTcpSocket *sock, const Packet &pkt)
         }
         else
         {
-            sock->write("MSG|Комната заполнена\n");
+            sock->write("MSG|The room is full\n");
         }
     }
     else if (cmd == "START")
@@ -156,7 +156,7 @@ void Room::handlePacket(QTcpSocket *sock, const Packet &pkt)
         if (m_userMgr.allAudienceVoted())
         {
             QString winner = m_userMgr.getWinner();
-            broadcastPacket(Packet("RESULT", "Лучший актёр: " + winner));
+            broadcastPacket(Packet("RESULT", "Best actor: " + winner));
         }
     }
 }

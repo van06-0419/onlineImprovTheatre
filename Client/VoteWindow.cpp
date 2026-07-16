@@ -11,7 +11,6 @@ VoteWindow::VoteWindow(Client* client, QWidget *parent)
 {
     ui->setupUi(this);
     connect(ui->btnVote, &QPushButton::clicked, this, &VoteWindow::onBtnVoteClicked);
-    // 监听网络数据包，获取演员列表
     connect(m_client, &Client::recvPacket, this, [this](Packet pkt){
         if (pkt.command() == "START")
         {
@@ -26,7 +25,6 @@ VoteWindow::VoteWindow(Client* client, QWidget *parent)
                     QString name = s.split(":").first();
                     m_actorList << name;
                 }
-                // 刷新下拉框
                 ui->cboxActor->clear();
                 ui->cboxActor->addItems(m_actorList);
             }
@@ -44,10 +42,10 @@ void VoteWindow::onBtnVoteClicked()
     QString selectName = ui->cboxActor->currentText();
     if (selectName.isEmpty())
     {
-        QMessageBox::warning(this, "Ошибка", "Выберите актёра!");
+        QMessageBox::warning(this, "Error", "Pleaae, select an actor!");
         return;
     }
     m_client->sendPacket(Packet("VOTE", selectName));
-    QMessageBox::information(this, "Голос принят", "Спасибо за голосование!");
+    QMessageBox::information(this, "Vote received", "Thank you for voting!");
     this->close();
 }

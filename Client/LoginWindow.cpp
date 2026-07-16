@@ -24,29 +24,28 @@ void LoginWindow::onBtnLoginClicked()
     QString name = ui->editName->text().trimmed();
     if (name.isEmpty())
     {
-        QMessageBox::warning(this, "提示", "Имя не может быть пустым");
+        QMessageBox::warning(this, "Warning", "Name can not be empty");
         return;
     }
 
     QString selectText = ui->cboxType->currentText().trimmed();
-    qDebug() << "Выбранный текст: |" << selectText << "|";
+    
 
     UserType type = AUDIENCE;
-    // 匹配俄语：Актёр = 演员
     if (selectText == "Актёр")
     {
         type = ACTOR;
-        qDebug() << "Определено как Актёр (ACTOR), type = 0";
+        qDebug() << "This is actor (ACTOR), type = 0";
     }
     else if (selectText == "Зритель")
     {
         type = AUDIENCE;
-        qDebug() << "Определено как Зритель (AUDIENCE), type = 1";
+        qDebug() << "This is audience (AUDIENCE), type = 1";
     }
 
     m_client->setUserName(name);
     m_client->setUserType(type);
-    qDebug() << "Сохранённый тип в Client: " << m_client->userType();
+    qDebug() << "Saved type in Client: " << m_client->userType();
 
     QString typeStr = (type == ACTOR) ? "ACTOR" : "AUDIENCE";
     Packet pkt("LOGIN", name + "," + typeStr);

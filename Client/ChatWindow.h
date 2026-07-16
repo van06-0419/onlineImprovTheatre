@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include "Client.h"
-#include "VoiceChat.h"  // ← ДОБАВЛЕНО
+#include "VoiceChat.h"  
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ChatWindow; }
@@ -23,7 +23,7 @@ private slots:
     void onRecvPacket(Packet pkt);
     void onBtnSendClicked();
     void onBtnVoteClicked();
-    void onMicToggled(bool checked);  // ← ДОБАВЛЕНО
+    void onMicToggled(bool checked);  
 
 signals:
     void gotoVote();
@@ -31,7 +31,7 @@ signals:
 private:
     Ui::ChatWindow *ui;
     Client*     m_client;
-    VoiceChat*  m_voiceChat;  // ← ДОБАВЛЕНО
+    VoiceChat*  m_voiceChat;  
 
     QString m_curScene;
     QString m_curRole;

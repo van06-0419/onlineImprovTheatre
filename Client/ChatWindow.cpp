@@ -12,10 +12,8 @@ ChatWindow::ChatWindow(Client* client, QWidget *parent)
 {
     ui->setupUi(this);
     
-    // ← ДОБАВЛЕНО: создание VoiceChat и подключение кнопки микрофона
     m_voiceChat = new VoiceChat(m_client, this);
     connect(ui->btnMic, &QPushButton::toggled, this, &ChatWindow::onMicToggled);
-    // ← КОНЕЦ ДОБАВЛЕНИЯ
     
     connect(m_client, &Client::recvPacket, this, &ChatWindow::onRecvPacket);
     connect(ui->btnSend, &QPushButton::clicked, this, &ChatWindow::onBtnSendClicked);
@@ -29,20 +27,20 @@ ChatWindow::~ChatWindow()
 
 void ChatWindow::initUI()
 {
-    qDebug() << "ChatWindow::initUI 读取用户类型：" << m_client->userType();
+    qDebug() << "ChatWindow::initUI User Type：" << m_client->userType();
     if (m_client->userType() == ACTOR)
     {
         ui->editMsg->setEnabled(true);
         ui->btnSend->setEnabled(true);
         ui->btnVote->setVisible(false);
-        qDebug() << "演员：输入框启用，投票按钮隐藏";
+        qDebug() << "Actor: input enabled, vote button hidden";
     }
     else
     {
         ui->editMsg->setEnabled(false);
         ui->btnSend->setEnabled(false);
         ui->btnVote->setVisible(true);
-        qDebug() << "观众：输入框禁用，投票按钮显示";
+        qDebug() << "Audience: input disabled, vote button shown";
     }
 }
 
@@ -80,10 +78,8 @@ void ChatWindow::onRecvPacket(Packet pkt)
     {
         ui->txtChat->append(data);
     }
-    // ← ДОБАВЛЕНО: обработка голосовых пакетов
     else if (cmd == "VOICE")
     {
-        // Формат: <имя>|<base64_pcm>
         int sep = data.indexOf('|');
         if (sep != -1)
         {
@@ -92,7 +88,6 @@ void ChatWindow::onRecvPacket(Packet pkt)
             m_voiceChat->handleVoicePacket(sender, base64Pcm);
         }
     }
-    // ← КОНЕЦ ДОБАВЛЕНИЯ
 }
 
 void ChatWindow::onBtnSendClicked()
@@ -110,7 +105,6 @@ void ChatWindow::onBtnVoteClicked()
     this->close();
 }
 
-// ← ДОБАВЛЕНО: новый метод для обработки переключения микрофона
 void ChatWindow::onMicToggled(bool checked)
 {
     if (checked)

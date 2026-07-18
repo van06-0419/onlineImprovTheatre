@@ -1,30 +1,24 @@
 #ifndef LOGINWINDOW_H
 #define LOGINWINDOW_H
 
-#include <QWidget>
-#include "Client.h"
+#include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class LoginWindow; }
 QT_END_NAMESPACE
 
-class LoginWindow : public QWidget
+class LoginWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit LoginWindow(Client* client, QWidget *parent = nullptr);
+    explicit LoginWindow(QWidget *parent = nullptr);
     ~LoginWindow();
 
-signals:
-    void loginSuccess();
-    void serverIPRequested(const QString& ip);
-
 private slots:
-    void onBtnLoginClicked();
+    void onLoginClicked();
 
 private:
     Ui::LoginWindow *ui;
-    Client* m_client;
 };
 
-#endif // LOGINWINDOW_H
+#endif

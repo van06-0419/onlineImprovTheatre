@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GameWindow</class>
+ <widget class="QMainWindow" name="GameWindow">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>1180</width><height>760</height></rect></property>
+  <property name="windowTitle"><string>Сетевая импровизированная сцена</string></property>
+  <property name="styleSheet"><string notr="true">
+QMainWindow { background:#090e1a; }
+QLabel { color:#e9edf7; }
+QFrame { background:#12192a; border:1px solid #25304a; border-radius:16px; }
+QTextBrowser,QLineEdit,QListWidget,QComboBox { background:#0d1322;color:#dce3f1;border:1px solid #283550;border-radius:10px;padding:8px; }
+QPushButton { background:#6d5dfc;color:white;border:none;border-radius:10px;padding:10px;font-weight:700; }
+QPushButton:hover { background:#7d70ff; }
+QPushButton#micButton { background:#202b43; }
+QGroupBox { color:#e9edf7;border:1px solid #34405f;border-radius:12px;margin-top:12px;padding-top:12px;font-weight:700; }
+QGroupBox::title { subcontrol-origin:margin;left:12px;padding:0 6px; }
+</string></property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="mainLayout">
+    <property name="leftMargin"><number>20</number></property><property name="topMargin"><number>20</number></property><property name="rightMargin"><number>20</number></property><property name="bottomMargin"><number>20</number></property>
+    <item>
+     <layout class="QHBoxLayout" name="headerLayout">
+      <item><widget class="QLabel" name="titleLabel"><property name="text"><string>🎭 Импровизационный театр</string></property><property name="styleSheet"><string>font-size:24px;font-weight:800;</string></property></widget></item>
+      <item><spacer name="headerSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint"><size><width>40</width><height>20</height></size></property></spacer></item>
+      <item><widget class="QLabel" name="identityLabel"><property name="text"><string>Статус</string></property><property name="styleSheet"><string>color:#aeb8cc;font-weight:700;</string></property></widget></item>
+      <item><widget class="QLabel" name="statusLabel"><property name="text"><string>● Ожидание начала</string></property><property name="styleSheet"><string>color:#7ee787;font-weight:700;</string></property></widget></item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="contentLayout">
+      <item>
+       <widget class="QFrame" name="leftPanel">
+        <property name="minimumSize"><size><width>250</width><height>0</height></size></property>
+        <property name="maximumSize"><size><width>280</width><height>16777215</height></size></property>
+        <layout class="QVBoxLayout" name="leftLayout">
+         <property name="leftMargin"><number>16</number></property><property name="topMargin"><number>16</number></property><property name="rightMargin"><number>16</number></property><property name="bottomMargin"><number>16</number></property>
+         <item><widget class="QLabel" name="actorTitle"><property name="text"><string>Онлайн актёры</string></property><property name="styleSheet"><string>font-size:16px;font-weight:800;</string></property></widget></item>
+         <item><widget class="QListWidget" name="actorList"/></item>
+         <item><widget class="QLabel" name="audienceTitle"><property name="text"><string>Онлайн зрители</string></property><property name="styleSheet"><string>font-size:16px;font-weight:800;</string></property></widget></item>
+         <item><widget class="QListWidget" name="audienceList"/></item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="centerLayout">
+        <item>
+         <widget class="QFrame" name="storyCard">
+          <layout class="QVBoxLayout" name="storyLayout">
+           <property name="leftMargin"><number>20</number></property><property name="topMargin"><number>18</number></property><property name="rightMargin"><number>20</number></property><property name="bottomMargin"><number>18</number></property>
+           <item><widget class="QLabel" name="sceneTitle"><property name="text"><string>Текущая сцена</string></property><property name="styleSheet"><string>color:#8f9bb3;font-weight:700;</string></property></widget></item>
+           <item><widget class="QLabel" name="sceneValue"><property name="text"><string>Ожидание запуска игры сервером...</string></property><property name="wordWrap"><bool>true</bool></property><property name="styleSheet"><string>font-size:19px;font-weight:800;</string></property></widget></item>
+           <item><widget class="QLabel" name="roleTitle"><property name="text"><string>Ваша роль</string></property><property name="styleSheet"><string>color:#8f9bb3;font-weight:700;</string></property></widget></item>
+           <item><widget class="QLabel" name="roleValue"><property name="text"><string>Ожидание распределения</string></property><property name="styleSheet"><string>color:#b9adff;font-size:17px;font-weight:800;</string></property></widget></item>
+          </layout>
+         </widget>
+        </item>
+        <item><widget class="QTextBrowser" name="chatBrowser"/></item>
+        <item>
+         <layout class="QHBoxLayout" name="sendLayout">
+          <item><widget class="QLineEdit" name="messageEdit"><property name="placeholderText"><string>Введите сообщение...</string></property></widget></item>
+          <item><widget class="QPushButton" name="micButton"><property name="text"><string>🎤 Включить микрофон</string></property></widget></item>
+          <item><widget class="QPushButton" name="sendButton"><property name="text"><string>Отправить</string></property></widget></item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="voteGroup">
+        <property name="minimumSize"><size><width>240</width><height>0</height></size></property>
+        <property name="maximumSize"><size><width>260</width><height>16777215</height></size></property>
+        <property name="title"><string>Голосование зрителей</string></property>
+        <layout class="QVBoxLayout" name="voteLayout">
+         <item><widget class="QLabel" name="voteHint"><property name="text"><string>Выберите лучшего актёра по вашему мнению</string></property><property name="wordWrap"><bool>true</bool></property><property name="styleSheet"><string>color:#aeb8cc;</string></property></widget></item>
+         <item><widget class="QComboBox" name="actorCombo"/></item>
+         <item><widget class="QPushButton" name="voteButton"><property name="text"><string>Отправить голос</string></property></widget></item>
+         <item><spacer name="voteSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint"><size><width>20</width><height>40</height></size></property></spacer></item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

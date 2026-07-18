@@ -24,6 +24,12 @@ public:
     User* findUser(QTcpSocket* sock);
     QString userName(QTcpSocket* sock) const;
 
+    const QVector<User>& users() const;
+
+    User* findUser(QTcpSocket* sock);
+
+    QString userName(QTcpSocket* sock) const;
+
 private:
     QVector<User> m_userList;
     QMap<QString, int> m_voteCount;

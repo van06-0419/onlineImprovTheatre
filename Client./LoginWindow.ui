@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LoginWindow</class>
+ <widget class="QMainWindow" name="LoginWindow">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>520</width><height>620</height></rect></property>
+  <property name="windowTitle"><string>Импровизированная сцена</string></property>
+  <property name="styleSheet"><string notr="true">
+QMainWindow { background: #0b1020; }
+QFrame#card { background: #151c2f; border: 1px solid #27314d; border-radius: 24px; }
+QLabel { color: #e9edf7; }
+QLineEdit { background:#0f1526; color:white; border:1px solid #34405f; border-radius:12px; padding:12px; font-size:15px; }
+QRadioButton { color:#cdd5e5; font-size:15px; spacing:8px; }
+QPushButton { background:#6d5dfc; color:white; border:none; border-radius:12px; padding:13px; font-weight:700; font-size:15px; }
+QPushButton:hover { background:#7d70ff; }
+</string></property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="rootLayout">
+    <item><spacer name="topSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint"><size><width>20</width><height>50</height></size></property></spacer></item>
+    <item>
+     <widget class="QFrame" name="card">
+      <property name="minimumSize"><size><width>420</width><height>470</height></size></property>
+      <layout class="QVBoxLayout" name="cardLayout">
+       <property name="leftMargin"><number>42</number></property><property name="topMargin"><number>42</number></property><property name="rightMargin"><number>42</number></property><property name="bottomMargin"><number>42</number></property>
+       <item><widget class="QLabel" name="logoLabel"><property name="text"><string>🎭</string></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="styleSheet"><string>font-size:56px;</string></property></widget></item>
+       <item><widget class="QLabel" name="titleLabel"><property name="text"><string>Импровизационный театр </string></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="styleSheet"><string>font-size:30px;font-weight:800;</string></property></widget></item>
+       <item><widget class="QLabel" name="subLabel"><property name="text"><string>Войдите на сцену и создайте свою историю</string></property><property name="alignment"><set>Qt::AlignCenter</set></property><property name="styleSheet"><string>color:#8f9bb3;font-size:14px;</string></property></widget></item>
+       <item><spacer name="space1"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint"><size><width>20</width><height>20</height></size></property></spacer></item>
+       <item><widget class="QLineEdit" name="nameEdit"><property name="placeholderText"><string>Введите ваш псевдоним</string></property></widget></item>
+       <item>
+        <layout class="QHBoxLayout" name="identityLayout">
+         <item><widget class="QRadioButton" name="actorRadio"><property name="text"><string>🎭 Актёр</string></property><property name="checked"><bool>true</bool></property></widget></item>
+         <item><widget class="QRadioButton" name="audienceRadio"><property name="text"><string>👁 Зритель</string></property></widget></item>
+        </layout>
+       </item>
+       <item><widget class="QPushButton" name="loginButton"><property name="text"><string>Войти в сцену</string></property><property name="minimumSize"><size><width>0</width><height>48</height></size></property></widget></item>
+      </layout>
+     </widget>
+    </item>
+    <item><spacer name="bottomSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint"><size><width>20</width><height>50</height></size></property></spacer></item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

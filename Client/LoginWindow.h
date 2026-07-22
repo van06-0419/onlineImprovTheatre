@@ -19,6 +19,8 @@ private slots:
 
 private:
     Ui::LoginWindow *ui;
+    // UI新增：IP输入框、端口输入框
+    // ui控件名：ipEdit、portEdit
 };
 
 #endif

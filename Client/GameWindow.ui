@@ -20,7 +20,7 @@ QGroupBox::title { subcontrol-origin:margin;left:12px;padding:0 6px; }
     <property name="leftMargin"><number>20</number></property><property name="topMargin"><number>20</number></property><property name="rightMargin"><number>20</number></property><property name="bottomMargin"><number>20</number></property>
     <item>
      <layout class="QHBoxLayout" name="headerLayout">
-      <item><widget class="QLabel" name="titleLabel"><property name="text"><string>🎭 Импровизационный театр</string></property><property name="styleSheet"><string>font-size:24px;font-weight:800;</string></property></widget></item>
+      <item><widget class="QLabel" name="titleLabel"><property name="text"><string>🎭 Сетевая импровизированная сцена</string></property><property name="styleSheet"><string>font-size:24px;font-weight:800;</string></property></widget></item>
       <item><spacer name="headerSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint"><size><width>40</width><height>20</height></size></property></spacer></item>
       <item><widget class="QLabel" name="identityLabel"><property name="text"><string>Статус</string></property><property name="styleSheet"><string>color:#aeb8cc;font-weight:700;</string></property></widget></item>
       <item><widget class="QLabel" name="statusLabel"><property name="text"><string>● Ожидание начала</string></property><property name="styleSheet"><string>color:#7ee787;font-weight:700;</string></property></widget></item>

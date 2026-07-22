@@ -1,5 +1,5 @@
-QT += core gui widgets network multimedia multimedia
-CONFIG += c++17 console
+QT += core gui widgets network multimedia
+CONFIG += c++17
 TEMPLATE = app
 
 SOURCES += \

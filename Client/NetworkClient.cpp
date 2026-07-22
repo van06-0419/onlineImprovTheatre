@@ -7,6 +7,10 @@ NetworkClient::NetworkClient(QObject *parent)
 {
     connect(m_socket, &QTcpSocket::connected, this, &NetworkClient::onConnected);
     connect(m_socket, &QTcpSocket::readyRead, this, &NetworkClient::onReadyRead);
+    // 转发底层socket断开信号
+    connect(m_socket, &QTcpSocket::disconnected, this, [this](){
+        emit disconnected();
+    });
 }
 
 void NetworkClient::connectServer(const QString &host, quint16 port)

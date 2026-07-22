@@ -7,28 +7,31 @@
 GameWindow::GameWindow(
         const QString &name,
         const QString &identity,
+        const QString &serverIp,
+        quint16 serverPort,
         QWidget *parent)
     :
     QMainWindow(parent),
     ui(new Ui::GameWindow),
     m_name(name),
     m_identity(identity),
+    m_serverIp(serverIp),
+    m_serverPort(serverPort),
     m_network(new NetworkClient(this)),
     m_audio(new AudioManager(this)),
     m_gameLogic(new GameLogic(this)),
     m_hasVoted(false)
 {
     ui->setupUi(this);
-
     ui->identityLabel->setText(identity=="actor" ? "Статус: Актёр" : "Статус: Зритель");
     ui->roleValue->setText(identity=="actor" ? "Ожидание распределения" : "Зрители без роли");
-
     ui->voteGroup->setVisible(false);
     ui->micButton->setVisible(identity=="actor");
-
     setupConnections();
-    m_network->connectServer("127.0.0.1", 8888);
+    // 使用传入的远程IP端口，不再写死127.0.0.1
+    m_network->connectServer(m_serverIp, m_serverPort);
 }
+
 GameWindow::~GameWindow()
 {
     delete ui;
@@ -36,6 +39,7 @@ GameWindow::~GameWindow()
 void GameWindow::setupConnections()
 {
     connect(m_network, &NetworkClient::connected, this, &GameWindow::onConnected);
+    connect(m_network, &NetworkClient::disconnected, this, &GameWindow::onDisconnectFromServer);
     connect(m_network, &NetworkClient::audioReceived, m_audio, &AudioManager::playAudio);
     connect(m_audio, &AudioManager::audioCaptured, m_network, &NetworkClient::sendAudio);
     connect(m_network, &NetworkClient::jsonReceived, this, [this](const QJsonObject &obj)
@@ -151,4 +155,10 @@ void GameWindow::appendMessage(const QString &sender, const QString &text)
         )
         .arg(time, sender.toHtmlEscaped(), text.toHtmlEscaped())
     );
+}
+
+void GameWindow::onDisconnectFromServer()
+{
+    QMessageBox::critical(this, "Потеря соединения", "Отключен от сервера, окно закроется");
+    this->close();
 }

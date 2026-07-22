@@ -6,6 +6,7 @@ LoginWindow::LoginWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::LoginWindow)
 {
     ui->setupUi(this);
+    // 默认本地地址，方便测试
     ui->ipEdit->setText("127.0.0.1");
     ui->portEdit->setText("8888");
     connect(ui->loginButton, &QPushButton::clicked,
@@ -37,6 +38,7 @@ void LoginWindow::onLoginClicked()
     }
 
     QString identity = ui->actorRadio->isChecked() ? "actor" : "audience";
+    // 把远程IP、端口传给GameWindow
     auto *game = new GameWindow(name, identity, ip, port);
     game->setAttribute(Qt::WA_DeleteOnClose);
     game->show();
